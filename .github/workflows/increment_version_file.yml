@@ -1,0 +1,59 @@
+name: Increment Version File
+
+on:
+  push:
+    branches:
+      - staging
+
+env:
+  VERSION_FILE_NAME: "VERSION"
+
+jobs:
+  increment-version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Check version file modifications
+        id: version_check
+        run: |
+          if git diff HEAD~1 HEAD --name-only | grep -q "^${{ env.VERSION_FILE_NAME }}$"; then
+            echo "version_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "version_changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Increment version
+        if: steps.version_check.outputs.version_changed == 'false'
+        run: |
+          if [ ! -f ${{ env.VERSION_FILE_NAME }} ]; then
+            echo "1.0.0" > ${{ env.VERSION_FILE_NAME }}
+          else
+            current_version=$(cat ${{ env.VERSION_FILE_NAME }})
+            if [[ $current_version =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+              major=${BASH_REMATCH[1]}
+              minor=${BASH_REMATCH[2]}
+              patch=${BASH_REMATCH[3]}
+          
+              new_patch=$((patch + 1))
+              new_version="${major}.${minor}.${new_patch}"
+          
+              echo "$new_version" > ${{ env.VERSION_FILE_NAME }}
+              echo "Incremented hotfix version from $current_version to $new_version"
+            else
+              echo "Error: ${{ env.VERSION_FILE_NAME }} file format not recognized"
+              exit 1
+            fi
+          fi
+
+      - name: Commit updated version file
+        if: steps.version_check.outputs.version_changed == 'false'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add ${{ env.VERSION_FILE_NAME }}
+          git commit -m "Auto-increment version to $(cat ${{ env.VERSION_FILE_NAME }})"
+          git push
