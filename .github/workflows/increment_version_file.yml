@@ -1,9 +1,11 @@
 name: Increment Version File
+description: GitHub action that increments the hotfix version of an VERSION filename
 
 on:
   push:
     branches:
       - staging
+      - release/v*
 
 env:
   VERSION_FILE_NAME: "VERSION"
@@ -33,7 +35,8 @@ jobs:
         if: steps.version_check.outputs.version_changed == 'false'
         run: |
           if [ ! -f ${{ env.VERSION_FILE_NAME }} ]; then
-            echo "1.0.0" > ${{ env.VERSION_FILE_NAME }}
+            echo "No version file with the name ${{env.VERSION_FILE_NAME}} exists"
+            exit 1
           else
             current_version=$(cat ${{ env.VERSION_FILE_NAME }})
             if [[ $current_version =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
