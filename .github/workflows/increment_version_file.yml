@@ -8,6 +8,9 @@ on:
 env:
   VERSION_FILE_NAME: "VERSION"
 
+permissions:
+  contents: write
+
 jobs:
   increment-version:
     runs-on: ubuntu-latest
