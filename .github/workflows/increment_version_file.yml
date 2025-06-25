@@ -57,3 +57,5 @@ jobs:
           git add ${{ env.VERSION_FILE_NAME }}
           git commit -m "Auto-increment version to $(cat ${{ env.VERSION_FILE_NAME }})"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
