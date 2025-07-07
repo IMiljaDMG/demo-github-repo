@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - staging
+      - release/*
 
 jobs:
   print-hello-world:
