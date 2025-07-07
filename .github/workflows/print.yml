@@ -1,0 +1,16 @@
+name: Print
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  increment-version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print hello world
+        id: print_hello_world
+        run: |
+          echo "Hello world"
