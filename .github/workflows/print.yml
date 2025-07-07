@@ -6,7 +6,7 @@ on:
       - staging
 
 jobs:
-  increment-version:
+  print-hello-world:
     runs-on: ubuntu-latest
 
     steps:
