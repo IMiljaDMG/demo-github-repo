@@ -1,0 +1,17 @@
+name: Print
+
+on:
+  push:
+    branches:
+      - staging
+      - release/*
+
+jobs:
+  print-hello-world:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print hello world
+        id: print_hello_world
+        run: |
+          echo "Hello world"
