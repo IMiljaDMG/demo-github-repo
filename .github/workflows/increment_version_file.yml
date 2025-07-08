@@ -61,7 +61,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add ${{ env.VERSION_FILE_NAME }}
-          git commit -m "Auto-increment version to $(cat ${{ env.VERSION_FILE_NAME }}) [ci skip]"
+          git commit -m "Auto-increment version to $(cat ${{ env.VERSION_FILE_NAME }}) [actions skip]"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
